@@ -6,9 +6,13 @@ import duckdb
 
 
 def encontrar_raiz_projeto(start: Path | None = None) -> Path:
-    """Encontra a pasta sessao-02-data-architecture a partir do diretório atual."""
+    """Encontra a raiz do projeto a partir do diretorio atual."""
     start = (start or Path.cwd()).resolve()
     for candidato in [start, *start.parents]:
+        if (candidato / "aula02" / "_common.py").exists():
+            return candidato
+        if (candidato / "_common.py").exists() and candidato.name == "aula02":
+            return candidato.parent
         if (candidato / "TODO.MD").exists() and (candidato / "exercicios").exists():
             return candidato
         filho = candidato / "sessao-02-data-architecture"
@@ -55,5 +59,5 @@ def conectar_duckdb(db_path: Path) -> duckdb.DuckDBPyConnection:
             try:
                 con.execute(f"LOAD {ext};")
             except Exception as exc:
-                print(f"Extensão {ext} não carregada: {exc}")
+                print(f"Extensao {ext} nao carregada: {exc}")
     return con
